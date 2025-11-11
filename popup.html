@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="content.css" />
+  </head>
+  <body>
+    <h2>ReserveAmerica Auto-Booker</h2>
+
+    <details class="info-box">
+      <summary>Quick Start Guide</summary>
+      <div>
+        <ol>
+          <li>
+            Navigate to the ReserveAmerica campsite page you wish to book and
+            select the desired dates.
+          </li>
+          <li>
+            Set your desired booking time using the "Target Start Time"
+            dropdown.
+          </li>
+          <li>
+            Keep this tab active and computer awake to ensure booking attempts
+            are not interrupted!
+          </li>
+          <li>
+            Click "Schedule for Target Time" to begin at the selected time, or
+            "Start Clicking Now" to begin immediately.
+          </li>
+          <li>
+            Keep this tab active and ensure your computer does not go to sleep
+            during the process.
+          </li>
+          <li>
+            For more help, see the
+            <a
+              href="https://github.com/your-repo/reserveamerica-booker#quick-start-guide"
+              target="_blank"
+              >documentation</a
+            >.
+          </li>
+        </ol>
+        <div class="warning">
+          <strong>IMPORTANT for NY State Parks:</strong> Peak season (Mar 15 -
+          Labor Day): 8 AM weekdays, 9 AM weekends. Off-season: 9 AM all days.
+        </div>
+      </div>
+    </details>
+
+    <div class="time-display">
+      <div class="time-label">SERVER TIME</div>
+      <div id="serverTime">--:--:-- --</div>
+    </div>
+
+    <div class="countdown" id="countdown">
+      <div>Starts in:</div>
+      <div id="countdownTime">--:--:--</div>
+    </div>
+
+    <div class="settings">
+      <label>Target Start Time:</label>
+      <select id="targetHour">
+        <option value="8">8:00 AM (Weekday Peak Season)</option>
+        <option value="9" selected>9:00 AM (Weekend/Off Season)</option>
+        <option value="10">10:00 AM</option>
+        <option value="12">12:00 PM</option>
+      </select>
+
+      <label>Click Speed (milliseconds):</label>
+      <input
+        type="number"
+        id="interval"
+        value="100"
+        min="50"
+        max="2000"
+        step="50"
+      />
+      <div class="tip">Ultra-fast: 50-100ms, Fast: 200ms, Normal: 500ms</div>
+
+      <label>Maximum Attempts:</label>
+      <input type="number" id="maxAttempts" value="200" min="0" />
+      <div class="tip">Keep trying for about 2 minutes at 0.5s speed</div>
+    </div>
+
+    <div id="status" class="status-idle">Ready to start</div>
+
+    <button id="schedule">Schedule for Target Time</button>
+    <button id="startNow">Start Clicking Now</button>
+    <button id="stop">Stop</button>
+
+    <script src="popup.js" defer></script>
+  </body>
+</html>

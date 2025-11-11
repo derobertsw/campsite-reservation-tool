@@ -1,0 +1,298 @@
+:root {
+  --radius: 8px;
+  --gap: 12px;
+  --font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  --primary: #1976d2;
+  --primary-contrast: #ffffff;
+  --secondary: #9c27b0;
+  --success: #2e7d32;
+  --error: #d32f2f;
+  --warning: #ed6c02;
+  --info: #0288d1;
+  --surface: #ffffff;
+  --background: #f5f7fa;
+  --muted: #6b7280;
+  --border: rgba(16, 24, 40, 0.08);
+  --shadow-1: 0 1px 3px rgba(16, 24, 40, 0.06), 0 1px 2px rgba(16, 24, 40, 0.08);
+  --shadow-2: 0 4px 10px rgba(16, 24, 40, 0.08);
+}
+
+/* Reset and layout */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: calc(var(--gap) * 1.5);
+  font-family: var(--font-family);
+  background: var(--background);
+  color: #0f1724;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-width: 400px;
+  max-width: 520px;
+  width: 100%;
+}
+
+/* Headings & small labels */
+h2 {
+  margin: 0 0 var(--gap) 0;
+  color: var(--primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin: 0 0 6px 0;
+  font-weight: 600;
+}
+
+/* Paper / card */
+.paper {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: calc(var(--gap) + 4px);
+  box-shadow: var(--shadow-1);
+  border: 1px solid var(--border);
+  margin-bottom: var(--gap);
+}
+
+/* Info box is just a paper variant with accent */
+.info-box {
+  padding: calc(var(--gap) - 2px);
+  border: 1px solid rgba(255, 107, 53, 0.15);
+  box-shadow: none;
+}
+.info-box summary {
+  margin: 0 0 6px 0;
+  color: #ff6b35;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.info-box li {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* Typography small helpers */
+.tip {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 6px;
+}
+
+/* Consistent inputs */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-size: 0.9375rem;
+  color: #0f1724;
+  outline: none;
+  transition: box-shadow 160ms, border-color 160ms;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.08);
+  border-color: var(--primary);
+}
+
+/* Time display / highlights */
+.time-display {
+  background: linear-gradient(
+    180deg,
+    rgba(2, 136, 209, 0.06),
+    rgba(2, 136, 209, 0.02)
+  );
+  color: var(--info);
+  font-family: "Courier New", monospace;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: calc(var(--gap) - 2px);
+  border-radius: var(--radius);
+  margin: var(--gap) 0;
+  font-weight: 700;
+  box-shadow: var(--shadow-1);
+  border: 1px solid rgba(2, 136, 209, 0.12);
+}
+.time-label {
+  display: block;
+  font-size: 0.6875rem;
+  color: rgba(2, 136, 209, 0.8);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+/* Countdown */
+.countdown {
+  background: linear-gradient(
+    180deg,
+    rgba(237, 124, 2, 0.06),
+    rgba(255, 193, 7, 0.03)
+  );
+  border: 1px solid rgba(255, 193, 7, 0.18);
+  color: #a66300;
+  font-size: 1.125rem;
+  text-align: center;
+  padding: calc(var(--gap) - 2px);
+  border-radius: var(--radius);
+  margin: var(--gap) 0;
+  font-weight: 700;
+  display: none;
+}
+.countdown.show {
+  display: block;
+}
+
+/* Buttons - material-like contained & outlined */
+button {
+  display: inline-block;
+  padding: 10px 14px;
+  margin: 8px 0;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  transition: transform 120ms ease, box-shadow 120ms ease,
+    background-color 120ms;
+  box-shadow: var(--shadow-1);
+  min-height: 44px;
+  width: 100%;
+  color: var(--primary-contrast);
+  background: var(--primary);
+}
+button:active {
+  transform: translateY(1px);
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Mapped buttons by id for backwards compatibility */
+#startNow {
+  background: var(--primary);
+  color: var(--primary-contrast);
+}
+#startNow:hover {
+  background: #135fa8;
+}
+
+#schedule {
+  background: var(--success);
+}
+#schedule:hover {
+  background: #25692a;
+}
+
+#stop {
+  background: var(--error);
+}
+#stop:hover {
+  background: #b02020;
+}
+
+/* Iconic outlined variant if needed */
+.btn-outlined {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid rgba(25, 118, 210, 0.18);
+  box-shadow: none;
+}
+
+/* Status badges */
+#status {
+  padding: 10px;
+  margin: var(--gap) 0;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  text-align: center;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: #0f1724;
+  box-shadow: var(--shadow-1);
+}
+.status-running {
+  background: rgba(255, 193, 7, 0.06);
+  color: #856404;
+  border-color: rgba(255, 193, 7, 0.18);
+}
+.status-scheduled {
+  background: rgba(2, 136, 209, 0.06);
+  color: #055160;
+  border-color: rgba(2, 136, 209, 0.12);
+}
+.status-success {
+  background: rgba(46, 125, 50, 0.06);
+  color: var(--success);
+  border-color: rgba(46, 125, 50, 0.12);
+}
+.status-idle {
+  background: rgba(15, 23, 36, 0.02);
+  color: var(--muted);
+  border-color: rgba(15, 23, 36, 0.04);
+}
+.status-error {
+  background: rgba(211, 47, 47, 0.06);
+  color: var(--error);
+  border-color: rgba(211, 47, 47, 0.12);
+}
+
+/* Warnings */
+.warning {
+  background: rgba(255, 193, 7, 0.06);
+  border: 1px solid rgba(255, 193, 7, 0.18);
+  border-radius: 6px;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 0.875rem;
+  color: #8a6d00;
+}
+
+/* Utilities */
+.flex {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.row {
+  display: flex;
+  gap: 12px;
+}
+.center {
+  text-align: center;
+}
+.small {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+/* Accessibility focus */
+:focus {
+  outline: none;
+}
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.12);
+  border-color: var(--primary);
+}

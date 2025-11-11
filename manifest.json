@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Campsite Auto-Booker",
+  "version": "1.0",
+  "description": "Automatically clicks Book Now button at scheduled time",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.reserveamerica.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ],
+  "icons": {
+    "16": "extension_icon16.png"
+  }
+}

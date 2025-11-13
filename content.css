@@ -51,6 +51,7 @@ label {
   color: var(--muted);
   margin: 0 0 6px 0;
   font-weight: 600;
+  padding-top: 10px;
 }
 
 /* Paper / card */

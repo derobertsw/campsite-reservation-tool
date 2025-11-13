@@ -237,43 +237,69 @@ button:disabled {
   box-shadow: none;
 }
 
-/* Status badges */
+/* Bootstrap-like alert status */
 #status {
-  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
   margin: var(--gap) 0;
-  border-radius: 6px;
+  border-radius: var(--radius);
   font-size: 0.875rem;
-  text-align: center;
-  font-weight: 700;
-  border: 1px solid var(--border);
-  background: #fff;
-  color: #0f1724;
-  box-shadow: var(--shadow-1);
+  font-weight: 600;
+  text-align: left;
+  border: 1px solid transparent;
+  box-shadow: none;
 }
+
+/* Variant colors inspired by Bootstrap alerts */
 .status-running {
-  background: rgba(255, 193, 7, 0.06);
+  background: #fff3cd;
   color: #856404;
-  border-color: rgba(255, 193, 7, 0.18);
+  border-color: #ffecb5;
 }
 .status-scheduled {
-  background: rgba(2, 136, 209, 0.06);
-  color: #055160;
-  border-color: rgba(2, 136, 209, 0.12);
+  background: #cfe2ff;
+  color: #084298;
+  border-color: #b6d4fe;
 }
 .status-success {
-  background: rgba(46, 125, 50, 0.06);
-  color: var(--success);
-  border-color: rgba(46, 125, 50, 0.12);
+  background: #d1e7dd;
+  color: #0f5132;
+  border-color: #badbcc;
 }
 .status-idle {
-  background: rgba(15, 23, 36, 0.02);
-  color: var(--muted);
-  border-color: rgba(15, 23, 36, 0.04);
+  background: #f8f9fa;
+  color: #6c757d;
+  border-color: #e9ecef;
 }
 .status-error {
-  background: rgba(211, 47, 47, 0.06);
-  color: var(--error);
-  border-color: rgba(211, 47, 47, 0.12);
+  background: #f8d7da;
+  color: #842029;
+  border-color: #f5c2c7;
+}
+
+/* Optional tiny square indicator (like Bootstrap's left accent) */
+#status .status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex: 0 0 auto;
+}
+.status-running .status-indicator {
+  background: #ffdf7a;
+}
+.status-scheduled .status-indicator {
+  background: #9ec5ff;
+}
+.status-success .status-indicator {
+  background: #9ad7b7;
+}
+.status-idle .status-indicator {
+  background: #dfe6ea;
+}
+.status-error .status-indicator {
+  background: #f5aeb5;
 }
 
 /* Warnings */

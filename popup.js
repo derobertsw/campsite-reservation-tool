@@ -32,6 +32,39 @@ function _setControlsEnabled(enabled) {
   if (maxAttempts) maxAttempts.disabled = !enabled;
 }
 
+// Update the duration tip dynamically: interval (ms) * maxAttempts
+function formatDuration(ms) {
+  if (!Number.isFinite(ms) || ms <= 0) return "0s";
+  const totalSeconds = Math.round(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  if (hours > 0) return `${hours}h ${minutes}m ${seconds}s`;
+  if (minutes > 0) return `${minutes}m ${seconds}s`;
+  return `${seconds}s`;
+}
+
+function updateDurationTip() {
+  const intervalEl = document.getElementById("interval");
+  const maxEl = document.getElementById("maxAttempts");
+  const tipEl = document.getElementById("durationTip");
+  if (!tipEl || !intervalEl || !maxEl) return;
+
+  const interval = parseInt(intervalEl.value, 10) || 0; // ms
+  const max = parseInt(maxEl.value, 10);
+
+  const secondsPer = (interval / 1000).toFixed(interval % 1000 === 0 ? 0 : 1);
+
+  if (!max || max <= 0) {
+    tipEl.textContent = `Keep trying until stopped at ${secondsPer}s per attempt`;
+    return;
+  }
+
+  const totalMs = interval * max;
+  const human = formatDuration(totalMs);
+  tipEl.textContent = `Keep trying for about ${human} at ${secondsPer}s per attempt`;
+}
+
 // Start clock immediately
 startClock();
 
@@ -43,6 +76,9 @@ document.getElementById("schedule").addEventListener("click", async () => {
     maxAttempts: parseInt(document.getElementById("maxAttempts").value),
     serverTimeOffset: serverTimeOffset,
   };
+
+  // Update the duration tip when the schedule button is clicked
+  updateDurationTip();
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
@@ -228,4 +264,10 @@ chrome.runtime.onMessage.addListener((message) => {
 // Initialize toggle button text correctly on load
 document.addEventListener("DOMContentLoaded", () => {
   setRunningState(false);
+  // Initialize dynamic duration tip and wire live updates
+  updateDurationTip();
+  const intervalEl = document.getElementById("interval");
+  const maxEl = document.getElementById("maxAttempts");
+  if (intervalEl) intervalEl.addEventListener("input", updateDurationTip);
+  if (maxEl) maxEl.addEventListener("input", updateDurationTip);
 });

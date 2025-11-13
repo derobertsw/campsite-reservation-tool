@@ -47,6 +47,8 @@
       </div>
     </details>
 
+    <div id="status" class="status-idle">Ready to start</div>
+
     <div class="time-display">
       <div class="time-label">SERVER TIME</div>
       <div id="serverTime">--:--:-- --</div>
@@ -79,10 +81,10 @@
 
       <label>Maximum Attempts:</label>
       <input type="number" id="maxAttempts" value="200" min="0" />
-      <div class="tip">Keep trying for about 2 minutes at 0.5s speed</div>
+      <div id="durationTip" class="tip">
+        Keep trying for about 2 minutes at 0.5s speed
+      </div>
     </div>
-
-    <div id="status" class="status-idle">Ready to start</div>
 
     <button id="schedule">Schedule for Target Time</button>
     <button id="toggleStart" class="btn-start">Start Clicking Now</button>

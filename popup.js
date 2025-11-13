@@ -6,26 +6,26 @@ let isRunning = false;
 
 function setRunningState(running) {
   isRunning = running;
-  const btn = document.getElementById('toggleStart');
+  const btn = document.getElementById("toggleStart");
   if (!btn) return;
   if (running) {
-    btn.textContent = 'Stop';
-    btn.classList.remove('btn-start');
-    btn.classList.add('btn-stop');
+    btn.textContent = "Stop";
+    btn.classList.remove("btn-start");
+    btn.classList.add("btn-stop");
     _setControlsEnabled(false);
   } else {
-    btn.textContent = 'Start Clicking Now';
-    btn.classList.remove('btn-stop');
-    btn.classList.add('btn-start');
+    btn.textContent = "Start Clicking Now";
+    btn.classList.remove("btn-stop");
+    btn.classList.add("btn-start");
     _setControlsEnabled(true);
   }
 }
 // Disable/enable inputs when running state changes
 function _setControlsEnabled(enabled) {
-  const scheduleBtn = document.getElementById('schedule');
-  const targetHour = document.getElementById('targetHour');
-  const interval = document.getElementById('interval');
-  const maxAttempts = document.getElementById('maxAttempts');
+  const scheduleBtn = document.getElementById("schedule");
+  const targetHour = document.getElementById("targetHour");
+  const interval = document.getElementById("interval");
+  const maxAttempts = document.getElementById("maxAttempts");
   if (scheduleBtn) scheduleBtn.disabled = !enabled;
   if (targetHour) targetHour.disabled = !enabled;
   if (interval) interval.disabled = !enabled;
@@ -66,52 +66,55 @@ document.getElementById("schedule").addEventListener("click", async () => {
 });
 
 // Toggle Start / Stop button handler
-document.getElementById('toggleStart').addEventListener('click', async () => {
+document.getElementById("toggleStart").addEventListener("click", async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
   if (!isRunning) {
     // Start immediately
     const config = {
       scheduled: false,
-      interval: parseInt(document.getElementById('interval').value),
-      maxAttempts: parseInt(document.getElementById('maxAttempts').value),
+      interval: parseInt(document.getElementById("interval").value),
+      maxAttempts: parseInt(document.getElementById("maxAttempts").value),
       serverTimeOffset: serverTimeOffset,
     };
 
     chrome.tabs.sendMessage(
       tab.id,
       {
-        action: 'start',
+        action: "start",
         config: config,
       },
       (response) => {
         if (chrome.runtime.lastError) {
-          updateStatus('Error: Reload the page and try again', 'status-error');
+          updateStatus("Error: Reload the page and try again", "status-error");
         } else {
           setRunningState(true);
         }
       }
     );
 
-    updateStatus('Starting now...', 'status-running');
+    updateStatus("Starting now...", "status-running");
     stopCountdown();
   } else {
     // Stop
     chrome.tabs.sendMessage(
       tab.id,
       {
-        action: 'stop',
+        action: "stop",
       },
       (response) => {
         if (chrome.runtime.lastError) {
-          console.log('sendMessage(stop) failed:', chrome.runtime.lastError.message);
+          console.log(
+            "sendMessage(stop) failed:",
+            chrome.runtime.lastError.message
+          );
         }
       }
     );
 
     setRunningState(false);
     _setControlsEnabled(true);
-    updateStatus('Stopped by user', 'status-idle');
+    updateStatus("Stopped by user", "status-idle");
     stopCountdown();
   }
 });
@@ -213,13 +216,16 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message.status) {
     updateStatus(message.status, message.className || "status-idle");
     // If content script reports idle or success, clear running state
-    if (message.className === 'status-idle' || message.className === 'status-success') {
+    if (
+      message.className === "status-idle" ||
+      message.className === "status-success"
+    ) {
       setRunningState(false);
     }
   }
 });
 
 // Initialize toggle button text correctly on load
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   setRunningState(false);
 });

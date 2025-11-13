@@ -1,6 +1,6 @@
 # Campsite Reservation Tool
 
-## Optimized for Reserver Americs
+## Optimized for Reserve America
 
 ### Setup Instructions
 
@@ -13,4 +13,9 @@
 - Keep this tab active and computer awake to ensure booking attempts are not interrupted!
 - Click "Schedule for Target Time" to begin at the selected time, or "Start Clicking Now" to begin immediately.
 - Keep this tab active and ensure your computer does not go to sleep during the process.
--
+
+### TODO
+
+- Fix scheduling issue
+- Make status more readable
+- Add additional campsite boking websites e.g. Suffolk County Parks

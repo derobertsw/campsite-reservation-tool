@@ -24,9 +24,9 @@ function scheduleAutoClick(config) {
   stopAutoClick();
   stopScheduled();
 
-  const now = new Date(Date.now() + config.serverTimeOffset);
+  const now = new Date(Date.now() + (config.serverTimeOffset || 0));
   const target = new Date(now);
-  target.setHours(config.targetHour, 0, 0, 0);
+  target.setHours(config.targetHour, config.targetMinute || 0, 0, 0);
 
   // If target time has passed today, set for tomorrow
   if (target <= now) {
@@ -35,14 +35,32 @@ function scheduleAutoClick(config) {
 
   const delay = target - now;
 
+  if (isNaN(delay) || delay <= 0) {
+    console.error("Invalid scheduled time. Delay must be a positive number.");
+    sendStatus("Error: Invalid scheduled time", "status-error");
+    return;
+  }
+
   console.log("=== Scheduled for:", target.toLocaleString());
   console.log("=== Starting in:", Math.floor(delay / 1000), "seconds");
 
+  const scheduledTimeStr = target.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   sendStatus(
-    "Scheduled for " + config.targetHour + ":00 AM",
+    "Scheduled for " + scheduledTimeStr,
     "status-scheduled"
   );
 
+  // Schedule to start clicking at exact time
+  if (delay > 0) {
+    scheduledTimeout = setTimeout(() => {
+      console.log("=== TARGET TIME REACHED! Starting auto-click ===");
+      startAutoClick(config);
+    }, delay);
+  } else {
+    console.warn("Scheduled time is in the past or immediate. Starting auto-click now.");
+    startAutoClick(config);
+  }
+}
   // Schedule to start clicking at exact time
   scheduledTimeout = setTimeout(() => {
     console.log("=== TARGET TIME REACHED! Starting auto-click ===");
@@ -117,15 +135,17 @@ function startAutoClick(config) {
   }, config.interval);
 }
 
+function isClickable(button) {
+  return isVisible(button) && !button.disabled;
+}
+
 function findBookNowButton() {
   // First: Look for ReserveAmerica's specific button
   const primaryButtons = document.querySelectorAll("button.btn.btn-primary");
   for (let button of primaryButtons) {
     const text = button.textContent.trim().toLowerCase();
-    if (text === "book now" || text === "book") {
-      if (isVisible(button) && !button.disabled) {
-        return button;
-      }
+    if ((text === "book now" || text === "book") && isClickable(button)) {
+      return button;
     }
   }
 
@@ -133,10 +153,8 @@ function findBookNowButton() {
   const allButtons = document.querySelectorAll('button, a[role="button"]');
   for (let button of allButtons) {
     const text = button.textContent.trim().toLowerCase();
-    if (text === "book now" || text === "book") {
-      if (isVisible(button) && !button.disabled) {
-        return button;
-      }
+    if ((text === "book now" || text === "book") && isClickable(button)) {
+      return button;
     }
   }
 

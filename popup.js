@@ -2,6 +2,35 @@
 let serverTimeOffset = 0;
 let clockInterval = null;
 let countdownInterval = null;
+let isRunning = false;
+
+function setRunningState(running) {
+  isRunning = running;
+  const btn = document.getElementById('toggleStart');
+  if (!btn) return;
+  if (running) {
+    btn.textContent = 'Stop';
+    btn.classList.remove('btn-start');
+    btn.classList.add('btn-stop');
+    _setControlsEnabled(false);
+  } else {
+    btn.textContent = 'Start Clicking Now';
+    btn.classList.remove('btn-stop');
+    btn.classList.add('btn-start');
+    _setControlsEnabled(true);
+  }
+}
+// Disable/enable inputs when running state changes
+function _setControlsEnabled(enabled) {
+  const scheduleBtn = document.getElementById('schedule');
+  const targetHour = document.getElementById('targetHour');
+  const interval = document.getElementById('interval');
+  const maxAttempts = document.getElementById('maxAttempts');
+  if (scheduleBtn) scheduleBtn.disabled = !enabled;
+  if (targetHour) targetHour.disabled = !enabled;
+  if (interval) interval.disabled = !enabled;
+  if (maxAttempts) maxAttempts.disabled = !enabled;
+}
 
 // Start clock immediately
 startClock();
@@ -26,6 +55,9 @@ document.getElementById("schedule").addEventListener("click", async () => {
     (response) => {
       if (chrome.runtime.lastError) {
         updateStatus("Error: Reload the page and try again", "status-error");
+      } else {
+        // Reflect running state in the popup toggle button
+        setRunningState(true);
       }
     }
   );
@@ -33,55 +65,55 @@ document.getElementById("schedule").addEventListener("click", async () => {
   startCountdown(config.targetHour);
 });
 
-document.getElementById("startNow").addEventListener("click", async () => {
-  const config = {
-    scheduled: false,
-    interval: parseInt(document.getElementById("interval").value),
-    maxAttempts: parseInt(document.getElementById("maxAttempts").value),
-    serverTimeOffset: serverTimeOffset,
-  };
-
+// Toggle Start / Stop button handler
+document.getElementById('toggleStart').addEventListener('click', async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-  chrome.tabs.sendMessage(
-    tab.id,
-    {
-      action: "start",
-      config: config,
-    },
-    (response) => {
-      if (chrome.runtime.lastError) {
-        updateStatus("Error: Reload the page and try again", "status-error");
+  if (!isRunning) {
+    // Start immediately
+    const config = {
+      scheduled: false,
+      interval: parseInt(document.getElementById('interval').value),
+      maxAttempts: parseInt(document.getElementById('maxAttempts').value),
+      serverTimeOffset: serverTimeOffset,
+    };
+
+    chrome.tabs.sendMessage(
+      tab.id,
+      {
+        action: 'start',
+        config: config,
+      },
+      (response) => {
+        if (chrome.runtime.lastError) {
+          updateStatus('Error: Reload the page and try again', 'status-error');
+        } else {
+          setRunningState(true);
+        }
       }
-    }
-  );
+    );
 
-  updateStatus("Starting now...", "status-running");
-  stopCountdown();
-});
-
-document.getElementById("stop").addEventListener("click", async () => {
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-  // Provide a callback so any "no receiver" error is reported via
-  // chrome.runtime.lastError instead of an unhandled rejected promise.
-  chrome.tabs.sendMessage(
-    tab.id,
-    {
-      action: "stop",
-    },
-    (response) => {
-      if (chrome.runtime.lastError) {
-        console.log(
-          "sendMessage(stop) failed:",
-          chrome.runtime.lastError.message
-        );
+    updateStatus('Starting now...', 'status-running');
+    stopCountdown();
+  } else {
+    // Stop
+    chrome.tabs.sendMessage(
+      tab.id,
+      {
+        action: 'stop',
+      },
+      (response) => {
+        if (chrome.runtime.lastError) {
+          console.log('sendMessage(stop) failed:', chrome.runtime.lastError.message);
+        }
       }
-    }
-  );
+    );
 
-  updateStatus("Stopped by user", "status-idle");
-  stopCountdown();
+    setRunningState(false);
+    _setControlsEnabled(true);
+    updateStatus('Stopped by user', 'status-idle');
+    stopCountdown();
+  }
 });
 
 async function startClock() {
@@ -180,5 +212,14 @@ function updateStatus(text, className) {
 chrome.runtime.onMessage.addListener((message) => {
   if (message.status) {
     updateStatus(message.status, message.className || "status-idle");
+    // If content script reports idle or success, clear running state
+    if (message.className === 'status-idle' || message.className === 'status-success') {
+      setRunningState(false);
+    }
   }
+});
+
+// Initialize toggle button text correctly on load
+document.addEventListener('DOMContentLoaded', () => {
+  setRunningState(false);
 });

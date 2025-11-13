@@ -185,6 +185,27 @@ button:disabled {
   box-shadow: none;
 }
 
+/* Toggle button modifiers */
+.btn-start {
+  background: var(--primary);
+  color: var(--primary-contrast);
+}
+.btn-start:hover {
+  background: #135fa8;
+}
+.btn-stop {
+  background: var(--error);
+  color: var(--primary-contrast);
+}
+.btn-stop:hover {
+  background: #b02020;
+}
+
+#toggleStart {
+  /* Ensure the toggle matches button sizing rules */
+  width: 100%;
+}
+
 /* Mapped buttons by id for backwards compatibility */
 #startNow {
   background: var(--primary);
